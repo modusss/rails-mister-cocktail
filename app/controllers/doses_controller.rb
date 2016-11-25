@@ -3,12 +3,14 @@ class DosesController < ApplicationController
   # GET /doses/new
   def new
     @ingredients = Ingredient.all
+    @cocktail = Cocktail.find(params[:cocktail_id])
     @dose = Dose.new
   end
 
   # POST /doses
   # POST /doses.json
   def create
+    @cocktail = Cocktail.find(params[:cocktail_id])
     @dose = @cocktail.doses.new(dose_params)
     if @dose.save
       redirect_to cocktail_path(@cocktail)
@@ -31,6 +33,7 @@ class DosesController < ApplicationController
   private
     # Never trust parameters from the scary internet, only allow the white list through.
     def dose_params
-      params.require(:dose).permit(:description)
+      # dose is connected with a foreigh key from 'ingredient'
+      params.require(:dose).permit(:description, :ingredient_id)
     end
 end

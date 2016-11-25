@@ -1,46 +1,23 @@
+require 'json'
+require 'open-uri'
+
 Cocktail.destroy_all
 Ingredient.destroy_all
 
-cocktails = [
+20.times do
 
-  {
-    name: "Sazerac",
-    },
-  {
-    name: "Vieux Carré",
-    },
-  {
-    name: "Ramos Gin Fizz",
-    },
-  {
-    name: "Mint Julep",
-    },
-  {
-    name: "Whiskey Sour",
-    },
-  {
-    name: "Mai Tai",
-    },
-  {
-    name: "Planter's Punch",
-    },
-  {
-    name: "Pisco Sour",
-    },
-  {
-    name: "Cosmopolitan",
-    },
-  {
-    name: "Tom Collins",
-    },
-  {
-    name: "Last Word",
+  url = "http://www.thecocktaildb.com/api/json/v1/1/random.php"
+  cocktail_serialized = open(url).read
+  cock = JSON.parse(cocktail_serialized)
 
-  }
-]
+  cocktail = Cocktail.new(name: cock['drinks'][0]['strDrink'])
+  cocktail.remote_photo_url = cock['drinks'][0]['strDrinkThumb']
+  cocktail.save
+
+end
 
 ingredients = %w(lemon ice mint leaves redbull jagermeister sugar tonic gin rhum)
 ingredients.each { |ingredient| Ingredient.create(name: ingredient) }
 
 
-cocktails.each { |cocktail| Cocktail.create(cocktail) }
+#cocktails.each { |cocktail| Cocktail.create(cocktail) }
